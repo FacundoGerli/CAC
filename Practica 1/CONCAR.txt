@@ -1,0 +1,40 @@
+ORG 1000H
+cadena db "AAAAAAAA"
+finTabla db ?
+
+ORG 3000H
+CONCAR:CMP AX,BX
+JZ VOLVER
+INC CL
+INC AX
+JMP CONCAR
+VOLVER:RET
+ORG 2000H
+
+MOV AX, OFFSET cadena
+MOV BX, OFFSET finTabla
+
+CALL CONCAR
+
+
+FIN:HLT
+END
+------------------------
+ORG 1000H
+cadena db "AAAAAAAA"
+finTabla db ?
+
+ORG 3000H
+CONCAR:SUB BX,AX
+RET
+ORG 2000H
+
+MOV AX, OFFSET cadena
+MOV BX, OFFSET finTabla
+CALL CONCAR
+
+
+FIN:HLT
+END
+--------------
+

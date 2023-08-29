@@ -1,0 +1,71 @@
+EOI equ 20h
+IMR equ 21h
+INT0 equ 24h
+PA equ 30H
+PB equ 31H
+CA equ 32H
+CB equ 33h
+ORG 3000H
+push AX
+push Bx
+push cx
+mov bx,offset str
+lazo:call poll
+mov al,[bx]
+out PB,al
+CALL pulso
+inc bx
+dec cl
+cmp cl,0
+jnz lazo
+
+mov al,20h;terminar impresion
+out EOI,al
+pop cx
+pop bx
+pop ax
+iret
+
+poll:in al,PA
+and al,1
+jnz poll
+ret
+
+ORG 4000H
+pulso:push ax
+IN al,PA ;generacion de pulso strobe
+and al,11111101b
+out PA,al
+or al,00000010b
+out PA,al
+pop ax
+ret
+
+ORG 1000H
+str db ?
+ORG 2000H
+cli
+;Configuracion pic F10
+mov al,11111110b
+out IMR,al
+mov al,10
+out INT0,al
+mov bx,40
+mov word ptr [Bx],3000h 
+ 
+;Configuracion del pio
+mov al,00000001b
+out CA,al
+mov al,00h
+out CB,al
+mov cl,0
+mov bx,offset str
+sti
+bucle:int 6
+inc cl
+inc bx
+jmp bucle
+
+
+HLT 
+END

@@ -1,0 +1,51 @@
+EOI EQU 20H
+IMR EQU 21H
+INT1 EQU 25H
+CONT EQU 10H
+COMP EQU 11H
+CB EQU 33h
+PB equ 31H
+
+ORG 3000h
+mov al,0 ;Reinicio cont
+out CONT,al
+cmp cl,11111111b
+jnz seguir
+mov cl,00000001b
+seguir:mov al,cl
+out PB,al
+MOV al,20h
+out EOI,al
+iret
+
+ORG 1000H
+
+ORG 2000H
+;activo las interrupciones por timer
+cli
+mov al,11111101b
+out IMR,al
+
+;Configuro int1
+mov al,22
+out INT1,al
+mov bx,88
+mov word ptr [bx],3000h
+
+;configuracion PIO
+mov al,00h
+out CB,al
+
+;configuracion timer
+mov al,0
+out CONT,al
+mov al,1
+out COMP,al
+mov cl,00000001b
+mov al,cl
+out PB,al
+sti
+bucle:jmp bucle
+HLT
+INT 0
+END

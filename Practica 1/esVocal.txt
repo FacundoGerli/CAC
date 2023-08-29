@@ -1,0 +1,31 @@
+ORG 1000H
+cadena db "AEIOUaeiou"
+finCadena db ?
+letra db "t"
+
+ORG 3000H
+esVocal:dec bx
+BUCLE:inc bx
+CMP AX,BX
+jz falso
+cmp dl,[BX]
+JZ verdad
+JMP BUCLE
+falso:mov cl,00h
+push cx
+JMP volver
+verdad:mov cl,0FFH
+push cx
+volver:ret
+
+
+ORG 2000H
+mov bx, OFFSET cadena
+mov ax, OFFSET finCadena
+MOV Dl,letra
+call esVocal
+POP CX
+
+
+HLT
+END

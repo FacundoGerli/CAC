@@ -1,0 +1,81 @@
+EOI equ 20H ; COMO imprimir bien el contador
+IMR equ 21H
+INT0 equ 24H
+INT1 equ 25H
+
+CONT equ 10H
+COMP equ 11H
+
+ORG 1000h
+segtotal db 30H
+parar db 0
+
+ORG 2900H
+parar1:cli
+mov byte ptr [bx],0
+sti
+mov al,20h
+out EOI,al
+iret
+
+
+ORG 3000H
+cli
+mov al,11111110b ;desactivo el timer
+out IMR,al
+mov al,12 ;redirecciono que hacer cuando interrumpo con f10
+out INT0,al
+mov bx,48
+mov word ptr [bx],2900h
+mov bx,offset parar
+mov byte ptr [bx],1
+sti
+lazo:cmp parar,1
+jz lazo
+;Recupero el estado anterior de las interrupciones
+mov al,11111100b
+out IMR,al
+mov al,10
+out INT0,al
+mov bx,40
+mov word ptr [bx],3000h
+mov al,20h
+out EOI,al
+iret
+
+ORG 3100H
+mov bx,offset segtotal ;incrementa segundos
+inc byte ptr [bx]
+mov al,offset parar - offset segtotal
+int 7
+mov al,0
+out CONT,al
+mov al,20h
+out EOI,al
+iret
+ORG 2000h
+cli
+;configuracion iMR
+mov al,11111100b
+out IMR,al
+;configuracion int0
+mov al,10
+out INT0,al
+mov bx,40
+mov word ptr [bx],3000h
+;configuracion int1
+MOV al,11
+OUT INT1, al
+mov bx,44
+mov word ptr [bx], 3100H
+;configuracion timer
+mov al,0
+out CONT,al
+mov al,1
+out COMP,al
+mov al,0
+sti
+bucle:cmp segtotal,10
+jnz bucle
+int 0
+end

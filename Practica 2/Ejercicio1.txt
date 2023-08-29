@@ -1,0 +1,15 @@
+ORG 1000H
+MSJ DB "CONCEPTOS DE "
+DB "ARQUITECTURA DE COMPUTADORAS-"
+DB "FACULTAD DE INFORMATICA-"
+DB 55H
+DB 4EH
+DB 4CH
+DB 50H
+FIN DB ?
+ORG 2000H
+MOV BX, OFFSET MSJ ;guarda la direccion de memoria del msj
+MOV AL, OFFSET FIN-OFFSET MSJ ;longitud del mensaje
+INT 7;llama a la interrupcion e imprimir segun lo que hay en bx(direccion)y al(longitud)
+INT 0
+END

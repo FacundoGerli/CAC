@@ -1,0 +1,40 @@
+ORG 1000H
+MSJ DB INGRESE UN NUMERO
+FIN DB 
+numeros db 30H
+MSJ2 DB  CARACTER NO VALIDO
+fin2 db 
+
+ORG 1500H
+NUM DB 
+
+ORG 3000H
+esNumMOv Dl,[Bx]
+mov bx,offset numeros
+lazocmp byte ptr [BX],dl
+jz salirB
+inc byte ptr [Bx]
+cmp byte ptr [BX],40H
+jz salirN
+jmp lazo
+
+salirNMOV Cl,00H
+MOV BX,offset MSJ2
+MOV AL,offset fin2 - offset MSJ2
+int 7
+ret
+salirBMOV cl,0ffH
+ret
+
+ORG 2000H
+MOV BX, OFFSET MSJ
+MOV AL, OFFSET FIN-OFFSET MSJ
+INT 7
+MOV BX, OFFSET NUM
+INT 6
+MOV AL, 1
+INT 7
+MOV CL, NUM
+call esNum
+INT 0
+END

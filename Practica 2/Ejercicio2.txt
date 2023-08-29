@@ -1,0 +1,14 @@
+ORG 1000H
+caracter db 01H
+
+
+ORG 2000H
+mov bx,offset caracter
+mov al,1
+
+lazo:INT 7
+INC byte ptr [BX]
+cmp caracter,7FH
+jnz lazo
+int 0
+END

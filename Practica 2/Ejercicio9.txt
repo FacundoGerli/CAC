@@ -1,0 +1,49 @@
+ORG 1000H
+clave db "XFGX"
+MSJ db "Ingrese la clave "
+MSJ1 db "ACCESO PERMITIDO"
+MSJ2 db "ACCESO DENEGADO"
+
+caracter db ?
+caracter1 db ?
+caracter2 db ?
+caracter3 db ?
+ORG 2000H
+mov bx,offset MSJ
+mov al,offset MSJ1 - offset MSJ
+int 7
+
+Mov bx,offset caracter
+int 6
+
+mov bx, offset caracter1
+int 6
+
+mov bx,offset caracter2
+int 6
+
+mov bx,offset caracter3
+int 6
+
+mov cx,0
+comprobacion:cmp cx,4
+jz salirBien
+mov bx,offset clave
+add bx,cx
+mov dl,[bx]
+mov bx,offset caracter
+add bx,cx
+cmp dl,[bx]
+jnz salirMal
+inc cx
+jmp comprobacion
+salirMal:mov bx,offset MSJ2
+mov al,offset caracter-offset MSJ2
+int 7
+jmp salir
+salirBien:mov bx,offset MSJ1
+mov al,offset MSJ2-offset MSJ1
+int 7
+jmp salir
+salir:int 0
+end

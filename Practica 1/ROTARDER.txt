@@ -1,0 +1,26 @@
+ORG 1000H
+NUM1 dw 8 ;MULTIPLICANDO
+NUM2 db 3 ; MULTIPLICADOR
+ORG 3000H
+ROTARDER:cmp cl,0
+jz volver
+dec cl
+mov dl,0
+CMP AX,0
+jz volver
+bucle:cmp ax,0
+js salir
+inc dl
+sub ax,2 
+jmp bucle
+salir:dec dl
+mov ax,dx
+jmp ROTARDER
+volver:RET
+ORG 2000H
+MOV AX,NUM1
+MOV CL,NUM2
+CALL ROTARDER
+
+FIN:HLT
+END

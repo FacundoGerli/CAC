@@ -1,0 +1,33 @@
+EOI equ 20h
+IMR equ 21H
+INT0 equ 24h
+ORG 1000H
+caracter db 41h
+ORG 3000h
+mov al,1
+int 7
+mov al,20h
+out EOI,al
+iret
+
+
+ORG 2000H
+cli;desactivo interrupciones hasta terminar de configurar interrupciones
+mov al,0feH;1111 1110 a EOi
+out IMR,al;activo la interrupcion con f10
+
+mov al,24
+out INT0,al ;envio el id de interrupcion
+
+mov bx,96 ;guardo la direccion de la subrutina en el vector de interrupcions
+mov word ptr [bx],3000h
+sti
+mov bx,offset caracter
+
+bucle:cmp byte ptr [bx],5ah
+jz reiniciar
+inc byte ptr [bx]
+jmp bucle
+reiniciar:mov byte ptr [bx], 41h
+jmp bucle
+end

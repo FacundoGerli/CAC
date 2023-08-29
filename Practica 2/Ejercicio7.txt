@@ -1,0 +1,47 @@
+ORG 1000H ;no imprime el total bien
+MSJ db "INGRESE UN DIGITO:"
+finmsj db ?
+MSJ2 db "  INGRESE EL SEGUNDO DIGITO:"
+finmsj2 db ?
+MSJ3 db "  EL RESULTADO DE LA SUMA ES :"
+digitoa db ?
+total db ?
+digitob db ?
+ORG 2000H
+mov bx,offset MSJ
+mov al,offset finmsj - offset MSJ
+int 7;imprime con bx y al long del mensajee
+
+mov bx,offset digitoa ;lee el digito y lo carga en digito(variable)
+int 6
+mov al,1
+int 7 ;imprimo el numero
+
+mov bx,offset MSJ2
+mov al,offset finmsj2 - offset MSJ2
+int 7;imprime con bx y al el mensaje
+
+mov bx,offset digitob ;lee el digito y lo carga en digito(variable)
+int 6
+mov al,1
+int 7 ;
+
+mov dl,[BX] ;guarda digitoa en dl
+sub dl,30h ; el numero representado no coincide con el valor. convierto el digito ingresado en el numero para operar
+mov bx,offset digitoa 
+mov dh,[bx] ;guarda digitob en dh
+sub dh,30h
+
+mov total,dl
+add total,dh
+
+
+mov bx,offset MSJ3
+mov al,offset digitob-offset MSJ3
+int 7
+
+mov bx,offset total
+mov al,offset digitob - offset total
+int 7
+int 0
+END
